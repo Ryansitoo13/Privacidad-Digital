@@ -73,6 +73,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
+
     #verify-btn:hover {
       background-color: #1E90FF;
     }
@@ -99,7 +100,7 @@
 <div class="container">
   <h1>Cuestionario CyberkidsCR sobre Privacidad Digital 🔒</h1>
   <p id="instructions">
-    Tienes <strong>infinitos intentos</strong> por ahora para probar el cuestionario mientras lo editas (cada pregunta vale 15 puntos). 😉
+    Tienes <strong>10 intentos</strong> para resolver el cuestionario (cada pregunta vale 15 puntos). ¡Mucho éxito! 😉
   </p>
 
   <div id="quiz">
@@ -224,7 +225,7 @@
     // Leer datos desde localStorage
     let attempts = parseInt(localStorage.getItem('attempts_priv') || '0');
     let bestScore = parseInt(localStorage.getItem('bestScore_priv') || '0');
-    const maxAttempts = 7;
+    const maxAttempts = 10; // Ahora son 10 intentos
 
     const verifyBtn = document.getElementById('verify-btn');
     const quiz = document.getElementById('quiz');
@@ -243,6 +244,7 @@
     }
 
     verifyBtn.addEventListener('click', function () {
+      // Si ya usó todos sus intentos, no hace nada
       if (attempts >= maxAttempts) return;
 
       attempts++;
@@ -276,13 +278,12 @@
 
       // Calcular puntaje total posible solo con las preguntas respondidas
       const totalPossibleScore = totalAnswered * pointsPerQuestion;
-      // Si no respondió nada, no tiene sentido calcular passingScore
       let passingScore = 0;
       if (totalPossibleScore > 0) {
         passingScore = totalPossibleScore * 0.7;
       }
 
-      // Guardar mejor puntaje en localStorage
+      // Guardar mejor puntaje en localStorage si es mayor al anterior
       if (score > bestScore) {
         bestScore = score;
         localStorage.setItem('bestScore_priv', bestScore.toString());
@@ -291,7 +292,7 @@
         scoreBoard.textContent = `Tu mejor puntuación sigue siendo: ${bestScore} puntos.`;
       }
 
-      // Mostrar mensaje segun resultado
+      // Mostrar el mensaje según el resultado
       if (totalAnswered === 0) {
         message.style.color = 'blue';
         message.textContent = 'No respondiste ninguna pregunta.';
@@ -305,7 +306,7 @@
         }
       }
 
-      // Verificar límite de intentos
+      // Verificar si se alcanzó el límite de intentos
       if (attempts >= maxAttempts) {
         verifyBtn.disabled = true;
         verifyBtn.style.opacity = '0.5';
@@ -317,3 +318,4 @@
 
 </body>
 </html>
+ 
