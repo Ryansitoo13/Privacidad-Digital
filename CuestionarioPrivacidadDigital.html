@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Cuestionario CyberkidsCR sobre Privacidad Digital 🔒</title>
   <style>
+    /* Estilos generales */
     body {
       font-family: Comic Sans MS, sans-serif;
       background: linear-gradient(135deg, #ADD8E6 0%, #E0FFFF 100%);
@@ -12,11 +13,12 @@
       text-align: center;
     }
 
+    /* Contenedor principal con menos margen */
     .container {
       max-width: 800px;
-      margin: 30px auto;
+      margin: 0 auto;         /* Quitamos el margen vertical de 30px */
       background: #fff;
-      padding: 20px;
+      padding: 10px 20px;     /* Reducimos padding */
       border-radius: 15px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       text-align: left;
@@ -27,26 +29,29 @@
       color: #1E90FF;
       text-align: center;
       text-shadow: 1px 1px 2px #fff;
+      margin: 10px 0;
     }
 
     p#instructions {
-      font-size: 18px;
+      font-size: 16px;
       color: #333;
-      margin: 15px 0;
+      margin: 10px 0;
       text-align: center;
     }
 
+    /* Cada pregunta con menos espacio */
     .question {
       background-color: #F0F8FF;
       border: 3px dashed #4682B4;
-      margin-bottom: 20px;
+      margin-bottom: 15px;  /* Reducido de 20px */
       padding: 15px;
       border-radius: 10px;
     }
 
     .question h3 {
-      font-size: 20px;
+      font-size: 18px; /* Reducido de 20px */
       color: #1E90FF;
+      margin: 0 0 10px 0;
     }
 
     .options label {
@@ -61,35 +66,37 @@
       margin-right: 8px;
     }
 
+    /* Botón principal */
     #verify-btn {
       background-color: #00BFFF;
       border: none;
       color: #fff;
       padding: 12px 25px;
-      font-size: 18px;
+      font-size: 16px; /* Reducido un poco */
       margin: 15px auto;
       display: block;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
     #verify-btn:hover {
       background-color: #1E90FF;
     }
 
+    /* Mensajes de resultado */
     #message {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
       text-align: center;
       color: #D32F2F;
-      margin-top: 15px;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
 
     #score-board {
       text-align: center;
-      font-size: 18px;
-      margin-top: 15px;
+      font-size: 16px;
+      margin: 10px 0;
       color: #333;
       font-weight: bold;
     }
@@ -225,7 +232,7 @@
     // Leer datos desde localStorage
     let attempts = parseInt(localStorage.getItem('attempts_priv') || '0');
     let bestScore = parseInt(localStorage.getItem('bestScore_priv') || '0');
-    const maxAttempts = 10; // Ahora son 10 intentos
+    const maxAttempts = 10; // 10 intentos
 
     const verifyBtn = document.getElementById('verify-btn');
     const quiz = document.getElementById('quiz');
@@ -244,7 +251,6 @@
     }
 
     verifyBtn.addEventListener('click', function () {
-      // Si ya usó todos sus intentos, no hace nada
       if (attempts >= maxAttempts) return;
 
       attempts++;
@@ -255,7 +261,7 @@
       const pointsPerQuestion = 15;
       let totalAnswered = 0;
 
-      // Revisar cada pregunta para ver si se respondió y si está correcta
+      // Calcular aciertos
       questions.forEach(q => {
         const correctValue = q.getAttribute('data-correct');
         const radios = q.querySelectorAll('input[type="radio"]');
@@ -267,7 +273,6 @@
           }
         });
 
-        // Solo cuenta si se respondió la pregunta
         if (selectedOption) {
           totalAnswered++;
           if (selectedOption.value === correctValue) {
@@ -276,14 +281,14 @@
         }
       });
 
-      // Calcular puntaje total posible solo con las preguntas respondidas
+      // Calcular puntaje total posible según respuestas dadas
       const totalPossibleScore = totalAnswered * pointsPerQuestion;
       let passingScore = 0;
       if (totalPossibleScore > 0) {
         passingScore = totalPossibleScore * 0.7;
       }
 
-      // Guardar mejor puntaje en localStorage si es mayor al anterior
+      // Actualizar mejor puntaje
       if (score > bestScore) {
         bestScore = score;
         localStorage.setItem('bestScore_priv', bestScore.toString());
@@ -292,7 +297,7 @@
         scoreBoard.textContent = `Tu mejor puntuación sigue siendo: ${bestScore} puntos.`;
       }
 
-      // Mostrar el mensaje según el resultado
+      // Mensajes de resultado
       if (totalAnswered === 0) {
         message.style.color = 'blue';
         message.textContent = 'No respondiste ninguna pregunta.';
@@ -306,7 +311,7 @@
         }
       }
 
-      // Verificar si se alcanzó el límite de intentos
+      // Verificar límite de intentos
       if (attempts >= maxAttempts) {
         verifyBtn.disabled = true;
         verifyBtn.style.opacity = '0.5';
@@ -318,4 +323,4 @@
 
 </body>
 </html>
- 
+
