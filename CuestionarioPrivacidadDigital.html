@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cuestionario CyberkidsCR sobre Privacidad Digital 🔒</title>
+  <style>
+    body {
+      font-family: Comic Sans MS, sans-serif;
+      background: linear-gradient(135deg, #FFD700 0%, #90EE90 100%);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #008000;
+      text-align: center;
+      text-shadow: 1px 1px 2px #fff;
+    }
+
+    p#instructions {
+      font-size: 18px;
+      color: #333;
+      margin: 15px 0;
+      text-align: center;
+    }
+
+    .question {
+      background-color: #F0FFF0;
+      border: 3px dashed #2E8B57;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .question h3 {
+      font-size: 20px;
+      color: #006400;
+    }
+
+    .options label {
+      display: block;
+      margin-bottom: 8px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .options input[type="radio"] {
+      transform: scale(1.2);
+      margin-right: 8px;
+    }
+
+    #verify-btn {
+      background-color: #FF8C00;
+      border: none;
+      color: #fff;
+      padding: 12px 25px;
+      font-size: 18px;
+      margin: 15px auto;
+      display: block;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #verify-btn:hover {
+      background-color: #32CD32;
+    }
+
+    #message {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+      color: #D32F2F;
+      margin-top: 15px;
+    }
+
+    #score-board {
+      text-align: center;
+      font-size: 18px;
+      margin-top: 15px;
+      color: #333;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Cuestionario CyberkidsCR sobre Privacidad Digital 🔒</h1>
+  <p id="instructions">
+    Tienes <strong>2 intentos</strong> para lograr la mejor puntuación posible (cada pregunta vale 15 puntos).
+    Si recargas la página, tus intentos restantes y tu mejor puntuación se mantendrán.
+  </p>
+
+  <div id="quiz">
+    <!-- AQUÍ VAN LAS 10 PREGUNTAS SOBRE PRIVACIDAD DIGITAL (se agregan igual que el ejemplo anterior) -->
+  </div>
+
+  <button id="verify-btn">✅ Verificar Respuestas</button>
+  <div id="message"></div>
+  <div id="score-board"></div>
+</div>
+
+<script>
+  let attempts = parseInt(localStorage.getItem('attempts_priv') || '0');
+  let bestScore = parseInt(localStorage.getItem('bestScore_priv') || '0');
+  const maxAttempts = 2;
+  const verifyBtn = document.getElementById('verify-btn');
+  const quiz = document.getElementById('quiz');
+  const message = document.getElementById('message');
+  const scoreBoard = document.getElementById('score-board');
+
+  if (bestScore > 0) {
+    scoreBoard.textContent = `Tu mejor puntuación anterior es: ${bestScore} puntos.`;
+  }
+  if (attempts >= maxAttempts) {
+    verifyBtn.disabled = true;
+    verifyBtn.style.opacity = '0.5';
+    message.style.color = 'red';
+    message.textContent = `Ya no tienes más intentos. Tu mejor puntuación fue de ${bestScore} puntos.`;
+  }
+
+  verifyBtn.addEventListener('click', function() {
+    if (attempts >= maxAttempts) return;
+
+    attempts++;
+    localStorage.setItem('attempts_priv', attempts);
+
+    let score = 0;
+    const questions = quiz.querySelectorAll('.question');
+    const pointsPerQuestion = 15;
+    const totalPossibleScore = questions.length * pointsPerQuestion;
+    const passingScore = totalPossibleScore * 0.7;
+
+    questions.forEach(q => {
+      const correctValue = q.getAttribute('data-correct');
+      const radios = q.querySelectorAll('input[type="radio"]');
+      let selectedOption = null;
+
+      radios.forEach(radio => {
+        if (radio.checked) {
+          selectedOption = radio;
+        }
+      });
+
+      if (selectedOption && selectedOption.value === correctValue) {
+        score += pointsPerQuestion;
+      }
+    });
+
+    if (score > bestScore) {
+      bestScore = score;
+      localStorage.setItem('bestScore_priv', bestScore.toString());
+      scoreBoard.textContent = `¡Nueva mejor puntuación!: ${bestScore} puntos.`;
+    } else {
+      if (bestScore > 0) {
+        scoreBoard.textContent = `Tu mejor puntuación sigue siendo: ${bestScore} puntos.`;
+      }
+    }
+
+    if (score >= passingScore) {
+      message.style.color = 'green';
+      message.textContent = `🎉 ¡Excelente! Obtuviste ${score}/${totalPossibleScore} puntos.`;
+    } else {
+      message.style.color = 'red';
+      message.textContent = `🤔 Obtuviste ${score}/${totalPossibleScore} puntos. ¡Sigue aprendiendo!`;
+    }
+
+    if (attempts >= maxAttempts) {
+      verifyBtn.disabled = true;
+      verifyBtn.style.opacity = '0.5';
+      message.textContent += ` Has utilizado tus ${maxAttempts} intentos.`;
+    }
+  });
+</script>
+
+</body>
+</html>
